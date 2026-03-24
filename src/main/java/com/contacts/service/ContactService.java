@@ -121,7 +121,11 @@ public class ContactService {
         Contact contact = contactRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Contact Not Found"));
         log.info("Toggling favourite contact {}", contact);
+        if (contact.getIsFavourite() == null) {
+        contact.setIsFavourite(true);
+    } else {
         contact.setIsFavourite(!contact.getIsFavourite());
+    }
         return ContactMapper.toResponse(contactRepository.save(contact));
     }
 }

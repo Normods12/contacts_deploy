@@ -36,7 +36,7 @@ public class Contact
     @Column(nullable = true)
     private String notes;
     @Column(nullable = true)
-    private Boolean isFavourite;
+    private Boolean isFavourite = false;
 
 
     @ToString.Exclude
