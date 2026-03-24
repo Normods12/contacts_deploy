@@ -33,16 +33,17 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    // Restored your exact class name!
     @Autowired
-    private JwtFilte jwtFilter;
+    private JwtFilte jwtFilter; 
 
-    @Value("${frontend.url}")
+    @Value("${frontend.url:https://sitelive.in}")
     private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/register")
@@ -77,10 +78,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(frontendUrl));
-        configuration.setAllowedMethods(Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:5173", 
+            "http://localhost:3000", 
+            "https://sitelive.in",   
+            "https://www.sitelive.in",
+            frontendUrl
+        ));
+        
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
